@@ -2,6 +2,7 @@
 import roslib
 #roslib.load_manifest('nexus7_bringup')
 import rospy
+import subprocess
 
 import tf
 from sensor_msgs.msg import Imu
