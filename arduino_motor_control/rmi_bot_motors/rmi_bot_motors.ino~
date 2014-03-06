@@ -28,21 +28,39 @@ ros::Publisher lwheel("lwheel", &leftEncoder);
 ros::Publisher rwheel("rwheel", &rightEncoder);
 
 int i = 10030;
+int flag = 1;
+
+void lmotorCB(const std_msgs::Int16& lmotorPower)
+{
+  //if(toggle_msg.data == 1) flag ^= 1;
+  //digitalWrite(13, flag);
+  leftEncoder = lmotorPower;
+}
+
+void rmotorCB(const std_msgs::Int16& rmotorPower)
+{
+  //if(toggle_msg.data == 1) flag ^= 1;
+  //digitalWrite(13, flag);
+  rightEncoder = rmotorPower;
+}
+
+ros::Subscriber<std_msgs::Int16> lmotor("lmotor", &lmotorCB);
+ros::Subscriber<std_msgs::Int16> rmotor("rmotor", &rmotorCB);
 
 void setup()
 {
   nh.initNode();
   nh.advertise(lwheel);
   nh.advertise(rwheel);
+  nh.subscribe(lmotor);
+  nh.subscribe(rmotor);
+  pinMode(13, OUTPUT);
 }
 
 void loop()
 {
-  leftEncoder.data = i;
-  rightEncoder.data = i;
   lwheel.publish(&leftEncoder);
   rwheel.publish(&rightEncoder);
   nh.spinOnce();
   delay(1000);
-  i++;
 }
